@@ -21,3 +21,8 @@ function! tamaya#auto() abort
        autocmd! InsertLeave * call tamaya#leave()
    augroup END
 endfunction
+
+function! tamaya#timer(time) abort
+    call timer_start(a:time, "tamaya#content#animate",{"repeat":-1})
+endfunction
+
