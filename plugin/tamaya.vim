@@ -14,7 +14,6 @@ command! -nargs=1 TamayaTimer call tamaya#timer(<f-args>)
 
 
 "let g:auto_tamaya = 1
-let g:tamaya_time = 10000
 
 if exists('g:auto_tamaya')
     call tamaya#auto()

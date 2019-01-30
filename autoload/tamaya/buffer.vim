@@ -1,5 +1,5 @@
 function! tamaya#buffer#new(bufname) abort
-    execute 'new' fnameescape(a:bufname)
+    execute 'edit' fnameescape(a:bufname)
     setlocal modifiable
     silent %delete _
     setlocal buftype=nofile bufhidden=wipe

@@ -23,6 +23,12 @@ function! tamaya#auto() abort
 endfunction
 
 function! tamaya#timer(time) abort
-    call timer_start(a:time, "tamaya#content#animate",{"repeat":-1})
+    let l:disp = {}
+    function! l:disp.call(...) abort
+        call tamaya#buffer#new('hello')
+        call tamaya#content#animate()
+    endfunction
+
+    let timer = timer_start(a:time, l:disp.call,{"repeat":-1})
 endfunction
 
