@@ -23,12 +23,26 @@ function! tamaya#auto() abort
 endfunction
 
 function! tamaya#timer(time) abort
-    let l:disp = {}
-    function! l:disp.call(...) abort
-        call tamaya#buffer#new('hello')
-        call tamaya#content#animate()
+    let l:disp = {"flag":0}
+
+    function! l:disp.tamaya(...) abort
+        let l:x = Random(60)
+        let l:y = Random(30)
+        call timer_pause(g:calltimer,1)
+        call tamaya#buffer#new('tamaya')
+        call tamaya#content#animate(l:x,l:y)
     endfunction
 
-    let timer = timer_start(a:time, l:disp.call,{"repeat":-1})
+    function! l:disp.call(...) abort
+        let g:tamayatimer = timer_start(4000, l:self.tamaya,{"repeat":-1})
+        call timer_pause(g:tamayatimer,0)
+    endfunction
+
+    let g:calltimer = timer_start(a:time, l:disp.call,{"repeat":-1})
 endfunction
 
+function! Random(n) abort
+    let l:match_end = matchend(reltimestr(reltime()), '\d\+\.') + 1
+    let l:rand = reltimestr(reltime())[l:match_end : ] % (a:n + 1)
+    return l:rand
+endfunction
