@@ -190,6 +190,13 @@ function! tamaya#content#animate(...) abort
 
     for l:r in l:result
         call setline(1,l:r)
+        let l:c = getchar(0)
+        if l:c != 0
+            call timer_pause(g:tamayatimer,1)
+            execute 'bw'
+            call timer_pause(g:calltimer,0)
+            break
+        endif
         sleep 300m
         redraw!
     endfor
