@@ -25,17 +25,13 @@ endfunction
 function! tamaya#timer(time) abort
     let l:disp = {"flag":0}
 
-    function! l:disp.tamaya(...) abort
+    function! l:disp.call(...) abort
         let l:x = Random(winwidth(0) - 19)
         let l:y = Random(winheight(0) - 14)
         call timer_pause(g:calltimer,1)
-        call tamaya#buffer#new('tamaya')
-        call tamaya#content#animate(l:x,l:y)
-    endfunction
-
-    function! l:disp.call(...) abort
-        let g:tamayatimer = timer_start(4000, l:self.tamaya,{"repeat":-1})
-        call timer_pause(g:tamayatimer,0)
+"        call tamaya#buffer#new('tamaya')
+        call tamaya#content#init()
+        call tamaya#content#animate()
     endfunction
 
     let g:calltimer = timer_start(a:time, l:disp.call,{"repeat":-1})

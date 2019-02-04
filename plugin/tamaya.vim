@@ -13,6 +13,7 @@ command! TamayaClear au! tamaya
 command! -nargs=1 TamayaTimer call tamaya#timer(<f-args>)
 
 
+
 "let g:auto_tamaya = 1
 
 if exists('g:auto_tamaya')
