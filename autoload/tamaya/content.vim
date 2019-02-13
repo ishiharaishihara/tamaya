@@ -1,13 +1,11 @@
 let s:animation_path = expand("<sfile>:p:h:h:h") . '/animation/'
+let s:clones = {}
 
 function! tamaya#content#init() abort
-    let s:clones = []
-
+    let s:clones.length = 0
     for l:y in range(line("w0"),line("w$"))
-        let l:clone = {}
-        let l:clone.num = l:y
-        let l:clone.line = getline(l:y)
-        call add(s:clones,l:clone)
+        let s:clones[l:y] = getline(l:y)
+        let s:clones.length += 1 
     endfor
 endfunction
 
@@ -27,20 +25,31 @@ function! tamaya#content#new(name) abort
     return l:contents
 endfunction
 
-function! tamaya#content#margin(line,index) abort
-    let l:line = ''
-    let l:merginsize = (winwidth(0) - len(a:line)) / 2
-    for l:x in range(l:merginsize)
-        let l:char = s:clones[a:index].line[l:x] != "" ? s:clones[a:index].line[l:x] : " "
-        let l:line = l:line . l:char 
+function! tamaya#content#margin(content) abort
+    let l:index = 0
+    let l:lines = {}
+    for l:key in sort(keys(s:clones))
+        if l:index >= len(a:content)
+            break
+        endif
+        let l:line = ''
+        let l:merginsize = (winwidth(0) - len(a:content[l:index])) / 2 
+        for l:x in range(l:merginsize)
+            let l:char = s:clones[l:key][l:x] != "" ? s:clones[l:key][l:x] : " "
+            let l:line = l:line . l:char
+        endfor
+        let l:lines[l:key] = l:line . a:content[l:index]
+        let l:index += 1
     endfor
-    return l:line . a:line
+    return l:lines
 endfunction
 
 function! tamaya#content#loop(content) abort
     while 1
         for l:line in a:content
-            call setline(1,l:line)
+            for l:key in keys(l:line)
+                call setline(l:key,l:line[l:key])
+            endfor
             redraw!
             let l:char = getchar(0)
             if l:char != 0
@@ -59,21 +68,15 @@ function! tamaya#content#line() abort
 endfunction
 
 function! tamaya#content#animate(...) abort
-    let l:tmp = []
+    let l:contents = []
     for l:content in tamaya#content#new('firework')
-        let l:lines = []
-        let l:index = 0
-        for l:line in l:content
-            call add(l:lines,tamaya#content#margin(l:line,l:index))
-            let l:index = l:index + 1
-        endfor
-        call add(l:tmp,l:lines)
+        call add(l:contents,tamaya#content#margin(l:content))
     endfor
 
-    call tamaya#content#loop(l:tmp)
+    call tamaya#content#loop(l:contents)
 
     call timer_pause(g:calltimer,0)
-    for l:clone in s:clones
-        call setline(l:clone.num,l:clone.line)
+    for l:key in keys(s:clones)
+        call setline(l:key,s:clones[l:key])
     endfor
 endfunction
