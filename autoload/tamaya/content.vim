@@ -1,3 +1,5 @@
+let s:animation_path = expand("<sfile>:p:h:h:h") . '/animation/'
+
 function! tamaya#content#init() abort
     let s:clones = []
 
@@ -10,7 +12,7 @@ function! tamaya#content#init() abort
 endfunction
 
 function! tamaya#content#new(name) abort
-    let l:filelist = expand(expand("<sfile>:p:h") . '/animation/'. a:name .'/*')
+    let l:filelist = expand(s:animation_path . a:name .'/*')
     let l:files = split(l:filelist,'\n')
     let l:contents = []
     for l:file in l:files
@@ -27,7 +29,6 @@ endfunction
 
 function! tamaya#content#margin(line,index) abort
     let l:line = ''
-    echo len(a:line)
     let l:merginsize = (winwidth(0) - len(a:line)) / 2
     for l:x in range(l:merginsize)
         let l:char = s:clones[a:index].line[l:x] != "" ? s:clones[a:index].line[l:x] : " "
