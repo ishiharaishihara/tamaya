@@ -50,12 +50,12 @@ function! tamaya#content#loop(content) abort
             for l:key in keys(l:line)
                 call setline(l:key,l:line[l:key])
             endfor
-            redraw!
+            redraw
             let l:char = getchar(0)
             if l:char != 0
                 break
             endif
-            sleep 10m
+            sleep 20m
         endfor
         if l:char != 0
             break
